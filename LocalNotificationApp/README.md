@@ -1,3 +1,5 @@
 # Local Notification Demo
 
-[React Native Push Notifications package](https://www.npmjs.com/package/react-native-push-notification)
+
+- Notifee, RN local notification package
+ - https://notifee.app/react-native/docs/overview
