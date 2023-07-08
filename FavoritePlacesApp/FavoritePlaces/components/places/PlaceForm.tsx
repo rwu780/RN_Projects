@@ -1,9 +1,16 @@
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function PlaceForm(): JSX.Element {
     return (
         <View>
-            <Text>The Place Form</Text>
+            <Text style={styles.text}>The Place Form</Text>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    text: {
+        color: 'white'
+    }
+
+})
