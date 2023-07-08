@@ -1,0 +1,3 @@
+# RN Animation
+
+![](RNAnimationRecording.gif)
