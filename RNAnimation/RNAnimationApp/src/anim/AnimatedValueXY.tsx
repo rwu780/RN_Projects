@@ -2,11 +2,11 @@ import React, {useRef} from 'react';
 import {Animated, Button, StyleSheet, View} from 'react-native';
 
 export default () => {
-  const marginValue = useRef(new Animated.Value(0)).current;
+  const vector = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
 
   const onAnimated = () => {
-    Animated.timing(marginValue, {
-      toValue: 200,
+    Animated.timing(vector, {
+      toValue: {x: 300, y: 400},
       duration: 1000,
       useNativeDriver: false,
     }).start();
@@ -17,14 +17,15 @@ export default () => {
       <Animated.View
         style={[
           styles.rect,
-          // {
-          //   marginStart: marginValue,
-          // },
           {
-            transform: [
-              { translateX: marginValue},
-            ],
-          }
+            marginStart: vector.x,
+            marginTop: vector.y
+          },
+        //   {
+        //     transform: [
+        //       { translateX: marginValue},
+        //     ],
+        //   }
           // {
           //   position: 'absolute',
           //   left: marginValue,

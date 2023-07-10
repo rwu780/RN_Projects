@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Animated, Button, StyleSheet, View} from 'react-native';
+import {Animated, Button, Easing, StyleSheet, View} from 'react-native';
 
 export default () => {
   const marginValue = useRef(new Animated.Value(0)).current;
@@ -8,6 +8,13 @@ export default () => {
     Animated.timing(marginValue, {
       toValue: 200,
       duration: 1000,
+    //   easing: Easing.back(3),
+      // easing: Easing.bounce,
+      // easing: Easing.elastic(4),
+      // easing: Easing.linear,
+      // easing: Easing.quad,
+      // easing: Easing.cubic,
+      easing: Easing.bezier(0.8, 0.74, 0.9, 0.25),
       useNativeDriver: false,
     }).start();
   };
@@ -21,10 +28,8 @@ export default () => {
           //   marginStart: marginValue,
           // },
           {
-            transform: [
-              { translateX: marginValue},
-            ],
-          }
+            transform: [{translateX: marginValue}],
+          },
           // {
           //   position: 'absolute',
           //   left: marginValue,
