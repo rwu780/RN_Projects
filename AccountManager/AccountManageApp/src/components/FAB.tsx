@@ -11,7 +11,7 @@ export default ({style, onClick} : FABInterface) => {
     const icon_add = require('../assets/icon_add.png')
 
     return (
-        <TouchableOpacity style={[style]} onPress={onClick}>
+        <TouchableOpacity style={[style]} onPress={onClick} activeOpacity={0.5}>
             <Image source={icon_add} style={styles.buttonStyle}/>
         </TouchableOpacity>
     )

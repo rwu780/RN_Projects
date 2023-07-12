@@ -5,8 +5,10 @@ import {
   Text,
   ImageURISource,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import {GlobalStyles} from '../theme/styles';
+import {useRef} from 'react'
 
 interface CategoryHeaderProps {
   icon: ImageURISource;
@@ -23,6 +25,26 @@ export default ({
 }: CategoryHeaderProps) => {
   const icon_arrow = require('../assets/icon_arrow.png');
 
+  const rotate = useRef(new Animated.Value(0)).current;
+
+  const rotateValue = rotate.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['0deg', '180deg']
+  })
+
+  const onAnimated = () => {
+    Animated.timing(rotate, {
+        toValue: isExpand ? 0 : 180,
+        duration: 500,
+        useNativeDriver: false
+    }).start()
+  }
+
+  const onArrowClicked = () => {
+    onAnimated();
+    expandClicked()
+  }
+
   return (
     <View
       style={[
@@ -34,12 +56,12 @@ export default ({
       ]}>
       <Image source={icon} style={styles.iconStyle} />
       <Text style={styles.headerTextStyle}>{headerText}</Text>
-      <TouchableOpacity style={styles.arrowStyle} onPress={expandClicked}>
-        <Image
+      <TouchableOpacity style={styles.arrowStyle} onPress={onArrowClicked}>
+        <Animated.Image
           source={icon_arrow}
           style={[
             styles.arrowImageStyle,
-            {transform: [{rotate: isExpand ? '0deg' : '-180deg'}]},
+            {transform: [{rotate: rotateValue}]},
           ]}
         />
       </TouchableOpacity>

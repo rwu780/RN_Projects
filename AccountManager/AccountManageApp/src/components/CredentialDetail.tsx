@@ -1,7 +1,7 @@
 import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import {GlobalStyles} from '../theme/styles';
 
-import Credential from '../data/model/Credential';
+import { Credential } from '../data/model/Credential';
 
 interface CredentialDetailProps {
   shouldDisplay: boolean;
@@ -28,7 +28,7 @@ export default ({
       style={styles.root}
       onLongPress={onLongPress}>
       <Text style={styles.credentialTypeText}>
-        {credential.getCredentialType()}
+        {credential.getPlatform()}
       </Text>
       <View style={styles.credentialSetsSection}>
         <Text

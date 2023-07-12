@@ -1,19 +1,25 @@
+export const CredentialTypesArray = ['Game', 'Entertainment', 'Bank', 'Misc']
+export type CredentialTypes = typeof CredentialTypesArray[number];
 
-type CredentialTypes = 'Game' | 'Entertainment' | 'Bank' | 'Misc'
 
-
-class Credential {
+export class Credential {
 
     private id: string
-    private credentialTypes: CredentialTypes
+    credentialTypes: CredentialTypes
+    private platform: string
     private username: string
     private password: string
 
-    constructor(id: string, username: string, password: string, type: CredentialTypes) {
+    constructor(id: string, platform: string, username: string, password: string, type: CredentialTypes) {
         this.id = id;
+        this.platform = platform;
         this.username = username;
         this.password = password;
         this.credentialTypes = type
+    }
+
+    getPlatform(): string {
+        return this.platform
     }
 
     getId() : string {
@@ -28,9 +34,7 @@ class Credential {
         return this.password;
     }
 
-    getCredentialType(): CredentialTypes {
-        return this.credentialTypes;
+    public getCredentialType(): string {
+        return this.credentialTypes.toString();
     }
 }
-
-export default Credential

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   LayoutAnimation,
@@ -10,20 +10,31 @@ import {
   Text,
   useColorScheme,
   View,
+  Alert,
 } from 'react-native';
 import {GlobalStyles} from './src/theme/styles';
 import ScreenHeader from './src/components/ScreenHeader';
 import FAB from './src/components/FAB';
 import CategoryHeader from './src/components/CategoryHeader';
 import CredentialDetail from './src/components/CredentialDetail';
-import Credential from './src/data/model/Credential';
+import {
+  Credential,
+  CredentialTypes,
+  CredentialTypesArray,
+} from './src/data/model/Credential';
+import AddCredentialScreen from './src/screens/AddCredentialScreen';
+import {getCredentials, saveCredential} from './src/util/storage';
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
 function App(): JSX.Element {
+  const addCredentialScreenRef = useRef(null);
+
   const [maskedPassword, setMaskedPassword] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [sectionData, setSectionData] = useState([]);
 
   const bankIcon = require('./src/assets/icon_bank.png');
   const gameIcon = require('./src/assets/icon_game.png');
@@ -89,7 +100,7 @@ function App(): JSX.Element {
   };
 
   const updateSectionState = (type: string) => {
-    LayoutAnimation.easeInEaseOut()
+    LayoutAnimation.easeInEaseOut();
     if (type === 'Game') {
       setSectionState(prevState => ({
         ...prevState,
@@ -113,74 +124,123 @@ function App(): JSX.Element {
     }
   };
 
-  const dummyData = [
-    {
-      type: 'Bank',
-      data: [
-        new Credential('2', '2abc', '2pwd', 'Bank'),
-        new Credential('3', '3abc', '3pwd', 'Bank'),
-        new Credential('4', '4abc', '4pwd', 'Bank'),
-      ],
-    },
-    {
-      type: 'Entertainment',
-      data: [
-        new Credential('5', '2abc', '2pwd', 'Entertainment'),
-        new Credential('6', '3abc', '3pwd', 'Entertainment'),
-        new Credential('7', '4abc', '4pwd', 'Entertainment'),
-      ],
-    },
-    {
-      type: 'Game',
-      data: [
-        new Credential('8', '2abc', '2pwd', 'Game'),
-        new Credential('9', '3abc', '3pwd', 'Game'),
-        new Credential('10', '4abc', '4pwd', 'Game'),
-      ],
-    },
-    {
-      type: 'Misc',
-      data: [
-        new Credential('11', '2abc', '2pwd', 'Misc'),
-        new Credential('12', '3abc', '3pwd', 'Misc'),
-        new Credential('13', '4abc', '4pwd', 'Misc'),
-      ],
-    },
-  ];
+  const dismissModal = () => {
+    console.log('Close Modal');
+    setModalVisible(false);
+  };
 
-  const c = new Credential('1', 'abc', 'pwd', 'Bank');
+  const loadData = () => {
+    getCredentials()
+      .then(data => {
+        const accountList = data ? JSON.parse(data) : [];
+
+        const credentialTypes = CredentialTypesArray;
+        const sectionListData = credentialTypes.map(ele => ({
+          type: ele,
+          data: accountList
+            .filter(item => item.credentialTypes == ele)
+            .map(c => {
+              return new Credential(
+                c.id,
+                c.platform,
+                c.username,
+                c.password,
+                c.credentialTypes,
+              );
+            }),
+        }));
+        LayoutAnimation.easeInEaseOut()
+        setSectionData(sectionListData);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const onAccountSaveSuccess = () => {
+    loadData();
+  };
+
+  const removeCredential = (id: string) => {
+    Alert.alert('Warning', 'Do you want to delete?', [
+      {
+        text: 'Yes',
+        onPress: () => {
+          deleteData(id);
+        },
+      },
+      {
+        text: 'No',
+        onPress: () => {},
+      },
+    ]);
+  };
+
+  const deleteData = (id: string) => {
+    getCredentials().then(data => {
+      let accountList = data ? JSON.parse(data) : [];
+
+      accountList = accountList.filter(item => item.id !== id);
+      saveCredential(accountList).then(() => {
+        loadData();
+      });
+    });
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.root}>
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={GlobalStyles.colors.primaryBackgroundColor}
+      />
       <ScreenHeader
-        switchState={maskedPassword}
+        switchState={!maskedPassword}
         setSwitchState={() => setMaskedPassword(!maskedPassword)}
       />
       <SectionList
         style={styles.sectionListStyle}
-        sections={dummyData}
+        sections={sectionData}
         renderItem={({item, index, section}) => (
           <CredentialDetail
-            shouldDisplay={sectionState[section.type]}
+            shouldDisplay={getSectionState(section.type)}
             credential={item}
             passwordMasked={maskedPassword}
-            onClick={() => {}}
-            onLongPress={() => {}}
+            onClick={() => {
+              addCredentialScreenRef.current.show(item);
+            }}
+            onLongPress={() => {
+              removeCredential(item.getId());
+            }}
           />
         )}
-        keyExtractor={(item, _) => item.getId()}
+        keyExtractor={(item, index) => `${item.getId()}-${index}`}
         renderSectionHeader={({section}) => (
           <CategoryHeader
             icon={getIconByType(section.type)}
             headerText={section.type}
             isExpand={getSectionState(section.type)}
-            expandClicked={() => { updateSectionState(section.type)}}
+            expandClicked={() => {
+              updateSectionState(section.type);
+            }}
           />
         )}
         stickySectionHeadersEnabled={false}
       />
 
-      <FAB style={styles.fabStyle} onClick={() => {}} />
+      <FAB
+        style={styles.fabStyle}
+        onClick={() => {
+          addCredentialScreenRef.current.show();
+        }}
+      />
+      <AddCredentialScreen
+        ref={addCredentialScreenRef}
+        onSave={onAccountSaveSuccess}
+      />
     </SafeAreaView>
   );
 }
