@@ -6,35 +6,46 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  useColorScheme,
-} from 'react-native';
+import { StatusBar} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
+import {NavigationContainer} from '@react-navigation/native';
 
+import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
+import Welcome from './src/modules/welcome/Welcome';
+import Login from './src/modules/login/Login';
+import HomeTab from './src/modules/home/HomeTab';
 
-
+const Stack = createStackNavigator();
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <StatusBar barStyle={'dark-content'} backgroundColor="white" />
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="PageA"
+          screenOptions={{
+            cardStyle: {elevation: 1},
+            
+          }}>
+          <Stack.Screen
+            name="Welcome"
+            component={Welcome}
+            options={{
+              headerShown: false,
+              ...TransitionPresets.SlideFromRightIOS
+            }}
+          />
+          <Stack.Screen name="Login" component={Login} options={{
+            ...TransitionPresets.SlideFromRightIOS,
+            headerShown: false
+          }}/>
+          <Stack.Screen name="HomeTab" component={HomeTab} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
 
 export default App;
