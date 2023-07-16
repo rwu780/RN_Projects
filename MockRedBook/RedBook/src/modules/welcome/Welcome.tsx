@@ -4,6 +4,7 @@ import icon_logo_main from '../../assets/icon_main_logo.png';
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { load } from "../../utils/Storage";
 
 export default () => {
 
@@ -11,14 +12,32 @@ export default () => {
 
     useEffect(() => {
         setTimeout(() => {
-            startLogin()
+            getUserInfo();
+            // startLogin()
         }, 3000
 
         )
     }, []);
 
+    const getUserInfo =async () => {
+        const cacheUserInfo = await load('userInfo')
+        if (cacheUserInfo && JSON.parse(cacheUserInfo)) {
+            startHome()
+
+        } else {
+            startLogin()
+        }
+        
+    }
+
     const startLogin = () => {
+
         navigation.replace("Login")
+    }
+
+    const startHome = () => {
+
+        navigation.replace("MainTab")
     }
 
     return (

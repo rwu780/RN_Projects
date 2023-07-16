@@ -7,20 +7,20 @@
 
 import React from 'react';
 import { StatusBar} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider, initialWindowMetrics} from 'react-native-safe-area-context';
 
 import {NavigationContainer} from '@react-navigation/native';
 
 import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
 import Welcome from './src/modules/welcome/Welcome';
 import Login from './src/modules/login/Login';
-import HomeTab from './src/modules/home/HomeTab';
+import MainTab from './src/modules/mainTab/MainTab';
 
 const Stack = createStackNavigator();
 
 function App(): JSX.Element {
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <StatusBar barStyle={'dark-content'} backgroundColor="white" />
       <NavigationContainer>
         <Stack.Navigator
@@ -41,7 +41,9 @@ function App(): JSX.Element {
             ...TransitionPresets.SlideFromRightIOS,
             headerShown: false
           }}/>
-          <Stack.Screen name="HomeTab" component={HomeTab} />
+          <Stack.Screen name="MainTab" component={MainTab} options={{
+            headerShown: false
+          }} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

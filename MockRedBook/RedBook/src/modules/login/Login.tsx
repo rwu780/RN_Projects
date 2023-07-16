@@ -7,6 +7,8 @@ import {
   TextInput,
   Platform,
   LayoutAnimation,
+  ToastAndroid,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
@@ -28,11 +30,15 @@ import icon_wx from '../../assets/icon_wx.png';
 import icon_qq from '../../assets/icon_qq.webp';
 import icon_close_modal from '../../assets/icon_close_modal.png';
 import {formatPhone, replaceBlank} from '../../utils/StringUtils';
+import {request} from '../../utils/request';
+import UserStore from '../../stores/UserStore';
 
 export default () => {
   const [loginType, setLoginType] = useState<'quick' | 'input'>('quick');
   const [check, setCheck] = useState<boolean>(false);
   const [eyeOpen, setEyeOpen] = useState<boolean>(true);
+
+  const URL = 'http://10.0.0.150/';
 
   const [phone, setPhone] = useState<string>('');
   const [pwd, setPwd] = useState<string>('');
@@ -40,10 +46,39 @@ export default () => {
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   const navigateToHomeScreen = () => {
-    navigation.replace('HomeTab');
+    navigation.replace('MainTab');
   };
 
   const canLogin = phone?.length === 13 && pwd?.length >= 6;
+
+  const onLoginPressed = async () => {
+    if (!canLogin) {
+      return;
+    }
+    // const params = {
+    //   name: 'dagongjue',
+    //   pwd: '123456',
+    // };
+
+    // const { data } = await request('login', params);
+
+    // console.log(`data=${JSON.stringify(data)}`);
+
+    // navigateToHomeScreen();
+    
+    UserStore.requestLogin(replaceBlank(phone), pwd, (success: boolean) => {
+      if (success) {
+        navigateToHomeScreen();
+      } else {
+        Alert.alert(
+          "Error",
+          "Login Failed"
+          
+        )
+      }
+      
+    })
+  };
 
   const protocalLayout = () => {
     const styles = StyleSheet.create({
@@ -420,21 +455,14 @@ export default () => {
         </View>
         <View style={{width: '100%'}}>
           <TouchableOpacity
-            style={[styles.loginButton,
-                !canLogin ? styles.loginButtonDisabled : {},
+            style={[
+              styles.loginButton,
+              !canLogin ? styles.loginButtonDisabled : {},
             ]}
             activeOpacity={canLogin ? 0.7 : 1}
             disabled={!canLogin}
-            onPress={() => {
-              const purePhone = replaceBlank(phone);
-              // TODO 登录
-              navigateToHomeScreen()
-            }}>
-            <Text
-              style={
-                styles.loginTxt
-                
-              }>{`登录`}</Text>
+            onPress={onLoginPressed}>
+            <Text style={styles.loginTxt}>{`登录`}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.protocalLayout}>{protocalLayout()}</View>
