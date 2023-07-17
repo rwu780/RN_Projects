@@ -3,6 +3,7 @@ declare module "*.jpg";
 declare module "*.jpeg";
 declare module "*.webp";
 declare module "*.json";
+declare module "*.js";
 
 type ArticleComment = {
     userName: string;
@@ -42,4 +43,10 @@ type ArticleSimple = {
     favoriteCount: number;
     isFavorite: boolean;
     image: string;
+}
+
+type Category = {
+    name: string;
+    default: boolean;
+    isAdd: boolean;
 }

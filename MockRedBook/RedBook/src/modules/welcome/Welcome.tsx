@@ -1,4 +1,5 @@
 import { Image, StyleSheet, View } from "react-native"
+import React from "react";
 
 import icon_logo_main from '../../assets/icon_main_logo.png';
 import { useEffect } from "react";
