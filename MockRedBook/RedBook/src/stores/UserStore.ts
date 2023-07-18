@@ -1,10 +1,16 @@
 import { request } from "../utils/request";
-import { flow } from 'mobx'
+import { action, flow, observable } from 'mobx'
 import { save } from "../utils/Storage";
 
 class UserStore {
 
+    @observable
     userInfo: any;
+
+    @action
+    setUserInfo = (info: any) => {
+        this.userInfo = info
+    }
 
     requestLogin = flow(function* (
         phone: string, 

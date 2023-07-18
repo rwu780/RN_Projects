@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { load } from "../../utils/Storage";
+import UserStore from "../../stores/UserStore";
 
 export default () => {
 
@@ -22,13 +23,17 @@ export default () => {
 
     const getUserInfo =async () => {
         const cacheUserInfo = await load('userInfo')
-        if (cacheUserInfo && JSON.parse(cacheUserInfo)) {
-            startHome()
-
-        } else {
+        if (!cacheUserInfo) {
             startLogin()
+        } else {
+            const userInfo = JSON.parse(cacheUserInfo)
+            if (!userInfo) {
+                startLogin
+            } else {
+                UserStore.setUserInfo(userInfo)
+                startHome()
+            }
         }
-        
     }
 
     const startLogin = () => {

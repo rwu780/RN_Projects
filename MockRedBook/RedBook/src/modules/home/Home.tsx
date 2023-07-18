@@ -9,7 +9,7 @@ import {
   StatusBar,
 } from 'react-native';
 import HomeStore from './HomeStore';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import HomeCard from './HomeCard';
 import {observer} from 'mobx-react';
 
@@ -18,12 +18,17 @@ import TitleLayout from './TitleLayout';
 import CategoryListHeader from './CategoryListHeader';
 import CategoryModal from './CategoryModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import ArticleDetail from '../articleDetails/ArticleDetail';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 export default observer(() => {
   const [tabIndex, setTabIndex] = useState<number>(1);
   const insets = useSafeAreaInsets();
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const store = useLocalStore(() => {
     return new HomeStore();
@@ -34,10 +39,20 @@ export default observer(() => {
     store.getCategoryList();
   }, []);
 
+  const onArticlePress = useCallback(
+    (item: ArticleSimple) => () => {
+        navigation.push('ArticleDetail', { id: item.id})
+    },
+    [],
+  );
+
   const renderItem = ({item, index}: {item: ArticleSimple; index: number}) => {
     return (
       <View style={styles.flatListItem}>
-        <HomeCard item={item} />
+        <HomeCard
+          item={item}
+          onPressed={onArticlePress(item)}
+        />
       </View>
     );
   };
@@ -111,7 +126,7 @@ export default observer(() => {
 const styles = StyleSheet.create({
   outsideContainer: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   root: {
     width: '100%',

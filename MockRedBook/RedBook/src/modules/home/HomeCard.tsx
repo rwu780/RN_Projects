@@ -5,14 +5,17 @@ import ResizeImage from '../../components/ResizeImage';
 import icon_heart from '../../assets/icon_heart.png'
 import icon_heart_empty from '../../assets/icon_heart_empty.png'
 import Heart from '../../components/Heart';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface HomeCardProps {
-    item: ArticleSimple
+    item: ArticleSimple,
+    onPressed(): void
 }
 
-export default ({item}: HomeCardProps) => {
+export default ({item, onPressed}: HomeCardProps) => {
   return (
     <View style={styles.root}>
+        <TouchableOpacity onPress={onPressed}>
         <ResizeImage uri={item.image} />
       {/* <Image source={{uri: item.image}} style={styles.itemImage} /> */}
       <Text style={styles.titleTxt}>{item.title}</Text>
@@ -23,6 +26,7 @@ export default ({item}: HomeCardProps) => {
         {/* <Image style={styles.heartImg} source={icon_heart_empty} /> */}
         <Text style={styles.countTxt}>{item.favoriteCount}</Text>
       </View>
+      </TouchableOpacity>
     </View>
   );
 };
