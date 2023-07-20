@@ -4,10 +4,8 @@ import {
   ScrollView,
   Dimensions,
   Image,
-  Platform,
   KeyboardAvoidingView,
   Text,
-  SafeAreaView
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {observer, useLocalStore} from 'mobx-react';
@@ -130,7 +128,7 @@ export default observer(() => {
   };
 
   return (
-    <SafeAreaView style={[styles.root, {marginTop: insets.top}]}>
+    <View style={[styles.root]}>
       <ArticleHeader
         avatarUrl={detail.avatarUrl}
         onBackPressed={onBackPressed}
@@ -161,7 +159,7 @@ export default observer(() => {
         </ScrollView>
         {renderBottom()}
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 });
 

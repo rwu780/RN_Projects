@@ -3,6 +3,7 @@ import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import icon_tab_publish from '../../assets/icon_tab_publish.png';
+import React = require('react');
 
 type CustomTabBar = {
   prop: BottomTabBarProps;
@@ -67,7 +68,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
-    paddingBottom: Platform.OS === 'ios' ? 15 : 0
   },
   tabItem: {
     height: '100%',

@@ -8,16 +8,18 @@ import Heart from '../../components/Heart';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface HomeCardProps {
+    resizeAbleImage?: boolean
     item: ArticleSimple,
     onPressed(): void
 }
 
-export default ({item, onPressed}: HomeCardProps) => {
+export default ({resizeAbleImage = true ,item, onPressed}: HomeCardProps) => {
   return (
     <View style={styles.root}>
         <TouchableOpacity onPress={onPressed}>
-        <ResizeImage uri={item.image} />
-      {/* <Image source={{uri: item.image}} style={styles.itemImage} /> */}
+            
+        { resizeAbleImage && <ResizeImage uri={item.image} />}
+      {!resizeAbleImage && <Image source={{uri: item.image}} style={styles.itemImage} />}
       <Text style={styles.titleTxt}>{item.title}</Text>
       <View style={styles.nameLayout}>
         <Image style={styles.avatarImg} source={{ uri: item.avatarUrl}} />
@@ -34,7 +36,7 @@ export default ({item, onPressed}: HomeCardProps) => {
 const styles = StyleSheet.create({
     root: {
         width: '100%',
-        height: '100%'
+        // height: '100%'
     },
     itemImage: {
         width: '100%',

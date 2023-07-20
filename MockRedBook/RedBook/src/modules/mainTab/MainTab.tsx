@@ -2,11 +2,12 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {
   launchImageLibrary,
   ImageLibraryOptions,
-  ImagePickerResponse
+  ImagePickerResponse,
 } from 'react-native-image-picker';
 import Home from '../home/Home';
 import Shop from '../shop/Shop';
@@ -24,8 +25,6 @@ import icon_tab_message_selected from '../../assets/icon_tab_message_selected.pn
 import icon_tab_mine from '../../assets/icon_tab_mine_normal.png';
 import icon_tab_mine_selected from '../../assets/icon_tab_mine_selected.png';
 import CustomTabBar from './CustomTabBar';
-
-
 
 export default () => {
   type TabRoute = 'Home' | 'Shop' | 'Message' | 'Mine' | 'Publish';
@@ -45,24 +44,23 @@ export default () => {
   };
 
   const launchImagePicker = () => {
-    launchImageLibrary({
-      mediaType: 'photo',
-      quality: 1,
-      includeBase64: true,
-    },
-    (res: ImagePickerResponse) => {
-        const { assets } = res;
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 1,
+        includeBase64: true,
+      },
+      (res: ImagePickerResponse) => {
+        const {assets} = res;
         if (!assets?.length) {
-            console.log('选择图片失败')
-            return;
+          console.log('选择图片失败');
+          return;
         }
-        const {
-            uri, width, height, fileName, fileSize, type
-        } =  assets[0]
+        const {uri, width, height, fileName, fileSize, type} = assets[0];
         console.log(
-            `${uri}======${width}=======${height}=======${fileName}======${fileSize}========${type}`
+          `${uri}======${width}=======${height}=======${fileName}======${fileSize}========${type}`,
         );
-    }
+      },
     );
   };
 
@@ -93,15 +91,13 @@ export default () => {
         // }}
         tabBar={props => (
           <CustomTabBar prop={props} launchPublish={launchImagePicker} />
-        )}
-    
-        >
+        )}>
         <BottomTab.Screen
           name="Home"
           component={Home}
           options={{
             title: '首页',
-            headerShown: false
+            headerShown: false,
           }}
         />
         <BottomTab.Screen
@@ -109,7 +105,7 @@ export default () => {
           component={Shop}
           options={{
             title: '购物',
-            headerShown: false
+            headerShown: false,
           }}
         />
         <BottomTab.Screen
@@ -117,7 +113,7 @@ export default () => {
           component={Message}
           options={{
             title: '发布',
-            headerShown: false
+            headerShown: false,
           }}
         />
         <BottomTab.Screen
@@ -125,7 +121,7 @@ export default () => {
           component={Message}
           options={{
             title: '消息',
-            headerShown: false
+            headerShown: false,
           }}
         />
         <BottomTab.Screen
@@ -133,7 +129,7 @@ export default () => {
           component={Mine}
           options={{
             title: '我',
-            headerShown: false
+            headerShown: false,
           }}
         />
       </BottomTab.Navigator>
@@ -145,5 +141,9 @@ const styles = StyleSheet.create({
   root: {
     width: '100%',
     height: '100%',
+    backgroundColor: 'white',
+  },
+  content: {
+    flex: 1,
   },
 });

@@ -96,7 +96,7 @@ export default observer(() => {
   };
 
   return (
-    <View style={[styles.outsideContainer, {paddingTop: insets.top}]}>
+    <View style={styles.outsideContainer}>
       <View style={styles.root}>
         {renderTitle()}
         <FlatList
