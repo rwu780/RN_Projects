@@ -1,0 +1,1 @@
+export const helpURL = `https://www.geekailab.com/doc/api-help/docs/rn-api-help.html`
