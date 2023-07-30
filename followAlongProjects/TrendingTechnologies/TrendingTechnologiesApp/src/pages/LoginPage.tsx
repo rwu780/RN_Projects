@@ -1,12 +1,32 @@
-import {SafeAreaView, StyleSheet, Text, View, Linking} from 'react-native';
-import React, {useState} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Linking,
+  StatusBar,
+  ActivityIndicator,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {Input} from '../components/Input';
 import PrimaryButton from '../components/PrimaryButton';
 import TextButton from '../components/TextButton';
-import { helpURL } from '../constants/url';
+import {helpURL} from '../constants/url';
+import Container from '../components/Container';
+import {COLORS} from '../constants/color';
+import NavBar from '../components/NavBar';
+import Divider from '../components/Divider';
+import {increment, incrementByAmount, selectCount} from '../app/countSlice';
+import {login, registerUser} from '../app/auth/authActions';
+import {useAppDispatch, useAppSelector} from '../app/hooks';
+import { loadingState } from '../app/auth/loginSlice';
 
 const LoginPage = () => {
-  const [credential, setCredential] = useState({
+  const dispatch = useAppDispatch();
+
+  const loading: boolean = useAppSelector(loadingState)
+
+  const [credential, setCredential] = useState<LoginCredential>({
     userName: '',
     password: '',
   });
@@ -25,16 +45,23 @@ const LoginPage = () => {
   };
 
   const onLoginClicked = () => {
-
-  }
+    dispatch(login(credential))
+  };
 
   const onHelpClicked = () => {
-    Linking.openURL(helpURL)
+    Linking.openURL(helpURL);
+  };
 
-  }
+  const onRegisterClicked = () => {};
 
   return (
-    <View style={styles.root}>
+    <Container backgroundColor={COLORS.white}>
+      <NavBar
+        title="登录"
+        rightString="注册"
+        onRightClicked={onRegisterClicked}
+      />
+      <Divider />
       <View style={styles.content}>
         <Input
           label={'用户名'}
@@ -53,20 +80,27 @@ const LoginPage = () => {
         />
         <PrimaryButton text={'登录'} onClick={onLoginClicked} />
         <TextButton text={'查看帮助'} onClick={onHelpClicked} />
+
+        <ActivityIndicator
+          size={'large'}
+          color={COLORS.primary}
+          animating={loading}
+        />
       </View>
-    </View>
+    </Container>
   );
 };
 
 export default LoginPage;
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
   content: {
     paddingTop: 20,
-    backgroundColor: '#F1F5F6',
+    backgroundColor: COLORS.backgroundColor,
     flexGrow: 1,
   },
+  indicator: {
+    width: '100%',
+    height: '100%'
+  }
 });

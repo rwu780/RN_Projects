@@ -51,6 +51,7 @@ export const Input = ({
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
+    backgroundColor: 'white'
   },
   label: {
     marginLeft: 15,
