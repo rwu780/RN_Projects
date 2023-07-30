@@ -19,15 +19,20 @@ import {COLORS} from '../constants/color';
 import NavBar from '../components/NavBar';
 import Divider from '../components/Divider';
 import {increment, incrementByAmount, selectCount} from '../app/countSlice';
-import {login, registerUser} from '../app/auth/authActions';
+import {loadUser, login, registerUser} from '../app/auth/authActions';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
-import {loadingState, loginErrorState} from '../app/auth/loginSlice';
+import {loadingState, loginErrorState, loginState} from '../app/auth/loginSlice';
+import { load } from '../utils/Storage';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const loading: boolean = useAppSelector(loadingState);
   const loginError = useAppSelector(loginErrorState);
+  const loginSuccess = useAppSelector(loginState);
 
   const [credential, setCredential] = useState<LoginCredential>({
     userName: '',
@@ -45,6 +50,22 @@ const LoginPage = () => {
       Alert.alert('Login Error', loginError, buttons);
     }
   }, [loginError]);
+
+  useEffect(() => {
+    getUserInfo();
+    
+  },[])
+
+  useEffect(() => {
+    if (loginSuccess) {
+      navigation.replace('Home')
+    }
+
+  }, [loginSuccess])
+
+  const getUserInfo = async () => {
+    dispatch(loadUser())
+  }
 
   const resetInputs = () => {
     setCredential({
@@ -74,7 +95,9 @@ const LoginPage = () => {
     Linking.openURL(helpURL);
   };
 
-  const onRegisterClicked = () => {};
+  const onRegisterClicked = () => {
+    navigation.replace('Register')
+  };
 
   return (
     <Container backgroundColor={COLORS.white}>

@@ -25,12 +25,12 @@ export const counterSlice= createSlice({
         }
     },
     extraReducers(builder) {
-        builder.addCase(
-            registerUser.pending, (state, action) => {
-                console.log("A#@#$#@")
-            }
+        // builder.addCase(
+        //     registerUser.pending, (state, action) => {
+        //         console.log("A#@#$#@")
+        //     }
 
-        )
+        // )
     }
 })
 

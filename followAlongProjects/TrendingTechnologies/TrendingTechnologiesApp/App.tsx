@@ -6,6 +6,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import store from './src/app/store';
+import HomePage from './src/pages/HomePage';
+import RegisterPage from './src/pages/RegisterPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +23,10 @@ function App(): JSX.Element {
               headerShown: false,
             }}
           />
+          <Stack.Screen name='Home' component={HomePage} />
+          <Stack.Screen name='Register' component={RegisterPage} options={{
+            headerShown: false
+          }} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

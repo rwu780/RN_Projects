@@ -18,7 +18,8 @@ interface Input {
   onChangeText: (text: string) => void;
   containerStyle?: ViewStyle;
   labelStyle?: TextStyle;
-  inputStyle?: TextStyle
+  inputStyle?: TextStyle,
+  editable? : boolean
 }
 
 export const Input = ({
@@ -28,7 +29,8 @@ export const Input = ({
   value,
   onChangeText,
   shortLine = false,
-  labelStyle
+  labelStyle,
+  editable = true
 }: Input) => {
   return (
     <View>
@@ -41,6 +43,7 @@ export const Input = ({
           autoCapitalize="none"
           onChangeText={onChangeText}
           style={styles.input}
+          editable={editable}
         />
       </View>
       <Divider dividerStyle={{ marginLeft: shortLine ? 20 : 0}} />

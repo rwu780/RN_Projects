@@ -1,34 +1,50 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {URLS} from '../../constants/url';
+import { load, save } from '../../utils/Storage';
+import { useAppDispatch } from '../hooks';
 
 const registrationEndpoint = 'uapi/user/registration';
 const loginEndpoint = 'https://api.devio.org/uapi/user/login';
+const KEY_SAVED_USER = "KEY_SAVED_USER"
+
+export const saveUser = createAsyncThunk(
+    'auth/save_user',
+    async (userData: userProfile, thunkApi) => {
+        console.log(JSON.stringify(userData))
+        return await save(KEY_SAVED_USER, JSON.stringify(userData))
+    }
+)
+
+export const loadUser = createAsyncThunk(
+    'auth/load_user',
+    async (_, thunkApi) => {
+        let cachedUser = await load(KEY_SAVED_USER);
+        if (!cachedUser) {
+            return thunkApi.rejectWithValue("No User Found")
+        }
+        const cachedUserJSON = JSON.parse(cachedUser)
+        if (!cachedUserJSON) {
+            return thunkApi.rejectWithValue("No User Found")
+        }
+        return thunkApi.fulfillWithValue(cachedUserJSON);
+    }
+)
 
 export const registerUser = createAsyncThunk(
   'auth/register',
-  async initialPost => {
-    await setTimeout(() => {
-      console.log('Hello');
-    }, 100);
-    console.log('ABCDEEFF');
-    return {};
-    // await const response =
-  },
-);
-
-export const login = createAsyncThunk(
-  'auth/login',
-  async (credential: LoginCredential, thunkApi) => {
+  async (credential: RegisterCredential, thunkApi) => {
     let formData = new FormData();
     formData.append('userName', credential.userName);
     formData.append('password', credential.password);
+    formData.append('imoocId', credential.moocId);
+    formData.append('orderId', credential.orderNumber);
+
     let response = handleData(
-      fetch(buildParams(URLS.url + URLS.login.api, formData), {
+      fetch(buildParams(URLS.url + URLS.registration.api, formData), {
         method: 'POST',
         body: formData,
         headers: {
-          'content-type': 'multipart/form-data',
           ...URLS.headers,
         },
       }),
@@ -37,7 +53,39 @@ export const login = createAsyncThunk(
     if (data.code !== 0) {
       return thunkApi.rejectWithValue(data.msg);
     }
-    return data;
+    return thunkApi.fulfillWithValue("Sucess")
+  },
+);
+
+export const login = createAsyncThunk(
+  'auth/login',
+  async (credential: LoginCredential, thunkApi) => {
+
+    let formData = new FormData();
+    formData.append('userName', credential.userName);
+    formData.append('password', credential.password);
+    let response = handleData(
+      fetch(buildParams(URLS.url + URLS.login.api, formData), {
+        method: 'POST',
+        body: formData,
+        headers: {
+          ...URLS.headers,
+        },
+      }),
+    );
+    let data = (await response) as ResponseType
+    if (data.code !== 0) {
+      return thunkApi.rejectWithValue(data.msg);
+    }
+    const userInfo = {
+        userName: data.extra?.userName,
+        data: data.data,
+        imoocId: data.extra?.imoocId,
+        avatar: data.extra?.avatar
+    } as userProfile
+
+    thunkApi.dispatch(saveUser(userInfo))
+    return userInfo;
   },
 );
 

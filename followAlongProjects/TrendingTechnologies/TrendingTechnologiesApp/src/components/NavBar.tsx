@@ -14,7 +14,7 @@ const NavBar = ({title, rightString, onRightClicked}: NavBarProps) => {
   return (
     <View style={styles.navBar}>
       <Text style={styles.headerTxt} >{title}</Text>
-      <TextButton text={'注册'} onClick={onRightClicked} buttonStyle={styles.optionMenu} textStyle={styles.optionTxt}  />
+      <TextButton text={rightString} onClick={onRightClicked} buttonStyle={styles.optionMenu} textStyle={styles.optionTxt}  />
     </View>
 
   );
