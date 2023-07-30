@@ -19,25 +19,28 @@ export const registerUser = createAsyncThunk(
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (credential: LoginCredential) => {
+    async (credential: LoginCredential, thunkApi) => {
         
-        let data = new FormData();
-        data.append('userName', credential.userName)
-        data.append('password', credential.password)
-        let response = handleData(
-            fetch(
-                buildParams(URLS.url + URLS.login.api, data),
+        let formData = new FormData();
+        formData.append('userName', credential.userName)
+        formData.append('password', credential.password)
+        let response = 
+            await fetch(
+                buildParams(URLS.url + URLS.login.api, formData),
                 {
                     method: 'POST',
-                    body: data,
+                    body: formData,
                     headers: {
                         'content-type': 'multipart/form-data',
                         ...URLS.headers
                     }
                 }
             )
-        )
-        return response;
+        let data = ((await response.json()) as ResponseType);
+        if (data.code !== 0) {
+            return thunkApi.rejectWithValue(data.msg);
+        }
+        return data
     }
 )
 

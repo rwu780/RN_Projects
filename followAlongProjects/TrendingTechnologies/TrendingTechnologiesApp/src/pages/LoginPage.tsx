@@ -6,6 +6,8 @@ import {
   Linking,
   StatusBar,
   ActivityIndicator,
+  Alert,
+  AlertButton,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Input} from '../components/Input';
@@ -19,17 +21,37 @@ import Divider from '../components/Divider';
 import {increment, incrementByAmount, selectCount} from '../app/countSlice';
 import {login, registerUser} from '../app/auth/authActions';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
-import { loadingState } from '../app/auth/loginSlice';
+import {loadingState, loginErrorState} from '../app/auth/loginSlice';
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
 
-  const loading: boolean = useAppSelector(loadingState)
+  const loading: boolean = useAppSelector(loadingState);
+  const loginError = useAppSelector(loginErrorState);
 
   const [credential, setCredential] = useState<LoginCredential>({
     userName: '',
     password: '',
   });
+
+  useEffect(() => {
+    if (loginError) {
+      const buttons: AlertButton[] = [
+        {
+          text: 'OK',
+          onPress: resetInputs,
+        },
+      ];
+      Alert.alert('Login Error', loginError, buttons);
+    }
+  }, [loginError]);
+
+  const resetInputs = () => {
+    setCredential({
+      userName: '',
+      password: '',
+    });
+  };
 
   const updateUserName = (input: string) => {
     setCredential(prevState => ({
@@ -45,7 +67,7 @@ const LoginPage = () => {
   };
 
   const onLoginClicked = () => {
-    dispatch(login(credential))
+    dispatch(login(credential));
   };
 
   const onHelpClicked = () => {
@@ -101,6 +123,6 @@ const styles = StyleSheet.create({
   },
   indicator: {
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 });

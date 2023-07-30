@@ -37,4 +37,5 @@ export const authSlice = createSlice({
 
 export const loadingState = (state: RootState) =>
   state.rootReducer.auth.loading;
+export const loginErrorState = (state: RootState) => state.rootReducer.auth.error
 export default authSlice.reducer;
