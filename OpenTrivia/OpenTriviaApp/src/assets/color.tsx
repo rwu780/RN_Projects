@@ -20,11 +20,12 @@ export const COLORS = {
   md_theme_light_surface: '#FFFBFF',
   md_theme_light_onSurface: '#1D1B1E',
   md_theme_light_surfaceVariant: '#E8E0EB',
-  md_theme_light_onSurfaceVariant: '#4A454E',
+  md_theme_light_onSurfaceVariant: '#4A454E66',
   md_theme_light_outline: '#7B757F',
   md_theme_light_inverseOnSurface: '#F5EFF4',
   md_theme_light_inverseSurface: '#1D1B1E',
   md_theme_light_inversePrimary: '#D9B9FF',
   md_theme_light_shadow: '#000000',
   md_theme_light_surfaceTint: '#8307F0',
+  black: 'black'
 };

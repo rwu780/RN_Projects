@@ -1,15 +1,13 @@
 import React from 'react';
-import {
-  View
-
-} from 'react-native';
-import { Router } from './src/Router';
-
+import {View} from 'react-native';
+import {Router} from './src/Router';
+import {Provider} from 'react-redux';
 
 function App(): JSX.Element {
-
   return (
-    <Router />
+    // <Provider>
+      <Router />
+    // </Provider>
   );
 }
 
