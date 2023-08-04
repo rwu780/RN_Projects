@@ -11,7 +11,6 @@ const KEY_SAVED_USER = "KEY_SAVED_USER"
 export const saveUser = createAsyncThunk(
     'auth/save_user',
     async (userData: userProfile, thunkApi) => {
-        console.log(JSON.stringify(userData))
         return await save(KEY_SAVED_USER, JSON.stringify(userData))
     }
 )
@@ -20,11 +19,12 @@ export const loadUser = createAsyncThunk(
     'auth/load_user',
     async (_, thunkApi) => {
         let cachedUser = await load(KEY_SAVED_USER);
+
         if (!cachedUser) {
             return thunkApi.rejectWithValue("No User Found")
         }
         const cachedUserJSON = JSON.parse(cachedUser)
-        if (!cachedUserJSON) {
+        if (Object.keys(cachedUserJSON).length === 0) {
             return thunkApi.rejectWithValue("No User Found")
         }
         return thunkApi.fulfillWithValue(cachedUserJSON);

@@ -4,7 +4,7 @@ import {loadUser, login, registerUser} from './authActions';
 
 interface LoginState {
   loading: boolean;
-  userData: any;
+  userData: userProfile | null;
   error: any;
   loginSuccess: boolean | null
   registerSuccess: boolean | null
@@ -12,7 +12,7 @@ interface LoginState {
 
 const initialState: LoginState = {
   loading: false,
-  userData: {},
+  userData: null,
   error: null,
   loginSuccess: null,
   registerSuccess: null
@@ -33,6 +33,7 @@ export const authSlice = createSlice({
       .addCase(loadUser.fulfilled, (state, action) => {
         state.loading = false;
         state.userData = action.payload;
+        console.log(JSON.stringify(state.userData))
         state.loginSuccess = true
       })
       .addCase(loadUser.rejected, (state, action) => {
@@ -54,13 +55,13 @@ export const authSlice = createSlice({
       })
       .addCase(login.pending, (state, action) => {
         state.loading = true;
+        state.userData = null;
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.userData = action.payload;
         state.loginSuccess = true
-        console.log(JSON.stringify(action.payload));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -76,4 +77,5 @@ export const loginErrorState = (state: RootState) =>
   state.rootReducer.auth.error;
 export const loginState = (state: RootState) => state.rootReducer.auth.loginSuccess
 export const registerStatus = (state: RootState) => state.rootReducer.auth.registerSuccess
+export const userData = (state: RootState) => state.rootReducer.auth.userData;
 export default authSlice.reducer;

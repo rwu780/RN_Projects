@@ -8,6 +8,7 @@ import {Provider} from 'react-redux';
 import store from './src/app/store';
 import HomePage from './src/pages/HomePage';
 import RegisterPage from './src/pages/RegisterPage';
+import MainScreen from './src/pages/MainScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,9 @@ function App(): JSX.Element {
               headerShown: false,
             }}
           />
-          <Stack.Screen name='Home' component={HomePage} />
+          <Stack.Screen name='Home' component={MainScreen} options={{
+            headerShown: false
+          }} />
           <Stack.Screen name='Register' component={RegisterPage} options={{
             headerShown: false
           }} />
